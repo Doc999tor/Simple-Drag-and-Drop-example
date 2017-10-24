@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Customers</title>
+        <style>
+        	body {padding: 1rem;margin: 0;color: #333;font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+	        }
+        	#drop_area {width: 250px;height: 250px;padding: 1rem;border: 5px solid green;border-radius: 5px;}
+        	#drop_area.active {border-color: blue;}
+        	#drop_area.down {border-color: red;}
+        	ul {width: 40%;max-width: 300px;margin: 0;}
+        	ul li {margin: 5px; padding: 5px; background-color: lightgoldenrodyellow; }
+        </style>
+    </head>
+    <body>
+        <div id='drop_area'></div>
+
+        <ul>
+        	<li draggable="true">Drag item #1</li>
+        	<li draggable="true">Drag item #2</li>
+        	<li draggable="true">Drag item #3</li>
+        	<li draggable="true">Drag item #4</li>
+        	<li draggable="true">Drag item #5</li>
+        </ul>
+<script>
+var itemList = document.querySelectorAll('ul li');
+itemList.forEach(item => {
+	item.addEventListener('dragstart', e => {
+		console.log('dragstart', e.target);
+		e.dataTransfer.setData('drag_index', Array.from(itemList).indexOf(e.target))
+		console.log(e.dataTransfer.getData('drag_index'));
+	});
+})
+
+var drop_area = document.getElementById('drop_area')
+drop_area.addEventListener('dragenter', e => {
+	e.target.classList.add('active')
+	// console.log('dragenter', e.target);
+});
+drop_area.addEventListener('dragleave', e => {
+	e.target.classList.remove('active')
+	// console.log('dragleave', e.target);
+});
+drop_area.addEventListener('drop', e => {
+	e.target.classList.add('down')
+	console.log('drop', e.target);
+
+	var item = itemList[e.dataTransfer.getData('drag_index')];
+	console.log(item);
+	item.removeAttribute('draggable')
+	e.target.appendChild(item);
+
+	return false;
+});
+drop_area.addEventListener('dragover', e => {
+	e.preventDefault();
+	// console.log('dragover', e.target);
+});
+</script>
+    </body>
+</html>
